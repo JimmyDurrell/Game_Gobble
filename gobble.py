@@ -45,22 +45,26 @@ if __name__ == "__main__":
             else:
                 Clear_All()
                 pygame.display.update()
-                if event_dict["up"] and snake.is_direction_horizontal():
-                    snake.move_up()
+                if event_dict["up"]:
                     event_dict["up"] = False
-                    last_time = time.time()
-                elif event_dict["down"] and snake.is_direction_horizontal():
-                    snake.move_down()
+                    if snake.is_direction_horizontal():
+                        snake.move_up()
+                        last_time = time.time()
+                elif event_dict["down"]:
                     event_dict["down"] = False
-                    last_time = time.time()
-                elif event_dict["left"] and snake.is_direction_vertical():
-                    snake.move_left()
+                    if snake.is_direction_horizontal():
+                        snake.move_down()
+                        last_time = time.time()
+                elif event_dict["left"]:
                     event_dict["left"] = False
-                    last_time = time.time()
-                elif event_dict["right"] and snake.is_direction_vertical():
-                    snake.move_right()
+                    if snake.is_direction_vertical():
+                        snake.move_left()
+                        last_time = time.time()
+                elif event_dict["right"]:
                     event_dict["right"] = False
-                    last_time = time.time()
+                    if snake.is_direction_vertical():
+                        snake.move_right()
+                        last_time = time.time()
                 else:  # 没有按键按下
                     now_time = time.time()
                     if now_time - last_time > snake.speed:

@@ -11,6 +11,7 @@ class Snake(deque):
 
     def init(self):
         self.clear()
+        self.direction = 'right'
         self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2), int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2)))
         self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2) - 1, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2)))
         self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2) - 2, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2)))
