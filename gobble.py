@@ -6,7 +6,7 @@ import time
 from pygame_event import pygame_process_event, esc_event
 
 
-def Clear_All():
+def Update_All():
     game_screen.background()
     snake.draw(game_screen)
     food.draw(game_screen)
@@ -14,7 +14,8 @@ def Clear_All():
 
 def Init_All():
     snake.init()
-    Clear_All()
+    food.create_food(snake)
+    Update_All()
     game_screen.start_menu()
 
 
@@ -32,6 +33,9 @@ if __name__ == "__main__":
                   "mouse": False, "start": False,
                   "default": False}
     last_time = time.time()
+
+    Init_All()
+    pygame.display.update()
     while True:
         word = pygame_process_event(game_screen)
         event_dict[word] = not event_dict[word]
@@ -43,8 +47,15 @@ if __name__ == "__main__":
                     pygame.display.flip()
                     event_dict["enter"] = event_dict["esc"] = event_dict["start"] = False
             else:
-                Clear_All()
+                Update_All()
                 pygame.display.update()
+                """还需要修改"""
+                # if snake.eat_food(food, word):
+                #     snake.eaten = True
+                #     snake.faster()
+                #     snake.longer((food.x, food.y))
+                #     food.create_food(snake)
+
                 if event_dict["up"]:
                     event_dict["up"] = False
                     if snake.is_direction_horizontal():
@@ -68,14 +79,14 @@ if __name__ == "__main__":
                 else:  # 没有按键按下
                     now_time = time.time()
                     if now_time - last_time > snake.speed:
-                        snake.move(snake.direction)
+                        snake.move()
                         last_time = now_time
+
         elif event_dict["mouse"]:
             time.sleep(0.15)
-            Clear_All()
+            Update_All()
             pygame.display.flip()
             event_dict["start"] = True
             event_dict["mouse"] = False
         else:
-            Init_All()
-            pygame.display.update()
+            pass

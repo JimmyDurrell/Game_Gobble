@@ -7,7 +7,8 @@ class Snake(deque):
     body_color = (200, 200, 200)
     head_color = (200, 100, 100)
     direction = 'right'
-    speed = 1
+    speed = 0.8
+    eaten = False
 
     def init(self):
         self.clear()
@@ -18,6 +19,28 @@ class Snake(deque):
 
     def reset(self):
         self.init()
+
+    """还需要修改"""
+    def eat_food(self, eaten_food, keyboard: str):
+        # return self[-1] == (eaten_food.x, eaten_food.y)
+        match self.direction:
+            case "up":
+                return (keyboard != "left" and keyboard != "right" and self[-1] == (eaten_food.x, eaten_food.y + 1)) \
+                    or (keyboard == "left" and self[-1] == (eaten_food.x + 1, eaten_food.y))
+            case "down":
+                return self[-1] == (eaten_food.x, eaten_food.y - 1)
+            case "left":
+                return self[-1] == (eaten_food.x + 1, eaten_food.y)
+            case "right":
+                return self[-1] == (eaten_food.x - 1, eaten_food.y)
+            case _:
+                pass
+
+    def faster(self):
+        self.speed -= 0.1
+
+    # def longer(self, loc: tuple):
+    #     self.append(loc)
 
     def is_direction_horizontal(self):
         return self.direction == "left" or self.direction == "right"
@@ -57,8 +80,8 @@ class Snake(deque):
         else:
             self.append((self[-1][0] + 1, self[-1][1]))
 
-    def move(self, direct):
-        match direct:
+    def move(self):
+        match self.direction:
             case "up":
                 self.move_up()
             case "down":
