@@ -77,7 +77,16 @@ class Snake(deque):
             return False
 
     def faster(self):
-        self.speed -= 0.01
+        if self.speed > 0.7:
+            self.speed -= 0.02
+        elif self.speed > 0.5:
+            self.speed -= 0.015
+        elif self.speed > 0.3:
+            self.speed -= 0.012
+        elif self.speed > 0.2:
+            self.speed -= 0.01
+        else:
+            pass
 
     # def longer(self, loc: tuple):
     #     self.append(loc)
