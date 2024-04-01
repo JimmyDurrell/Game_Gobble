@@ -27,6 +27,7 @@ if __name__ == "__main__":
     game_screen = Screen()
     snake = Snake()
     food = Food()
+    eat_flag = False
 
     event_dict = {"enter": False, "esc": False, "space": False,
                   "left": False, "right": False, "up": False, "down": False,
@@ -49,38 +50,37 @@ if __name__ == "__main__":
             else:
                 Update_All()
                 pygame.display.update()
-                """还需要修改"""
-                # if snake.eat_food(food, word):
-                #     snake.eaten = True
-                #     snake.faster()
-                #     snake.longer((food.x, food.y))
-                #     food.create_food(snake)
 
                 if event_dict["up"]:
                     event_dict["up"] = False
                     if snake.is_direction_horizontal():
-                        snake.move_up()
+                        snake.move_up(eat_flag := snake.is_food_up(food, snake.direction))
                         last_time = time.time()
                 elif event_dict["down"]:
                     event_dict["down"] = False
                     if snake.is_direction_horizontal():
-                        snake.move_down()
+                        snake.move_down(eat_flag := snake.is_food_down(food, snake.direction))
                         last_time = time.time()
                 elif event_dict["left"]:
                     event_dict["left"] = False
                     if snake.is_direction_vertical():
-                        snake.move_left()
+                        snake.move_left(eat_flag := snake.is_food_left(food, snake.direction))
                         last_time = time.time()
                 elif event_dict["right"]:
                     event_dict["right"] = False
                     if snake.is_direction_vertical():
-                        snake.move_right()
+                        snake.move_right(eat_flag := snake.is_food_right(food, snake.direction))
                         last_time = time.time()
                 else:  # 没有按键按下
                     now_time = time.time()
                     if now_time - last_time > snake.speed:
-                        snake.move()
+                        snake.move(eat_flag := snake.is_food_ahead(food, snake.direction))
                         last_time = now_time
+
+                if eat_flag:
+                    eat_flag = False
+                    snake.faster()
+                    food.create_food(snake)
 
         elif event_dict["mouse"]:
             time.sleep(0.15)

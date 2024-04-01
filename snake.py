@@ -8,7 +8,6 @@ class Snake(deque):
     head_color = (200, 100, 100)
     direction = 'right'
     speed = 0.8
-    eaten = False
 
     def init(self):
         self.clear()
@@ -21,23 +20,64 @@ class Snake(deque):
         self.init()
 
     """还需要修改"""
-    def eat_food(self, eaten_food, keyboard: str):
-        # return self[-1] == (eaten_food.x, eaten_food.y)
-        match self.direction:
+    # def eat_food(self, eaten_food, keyboard: str):
+    #     # return self[-1] == (eaten_food.x, eaten_food.y)
+    #     match self.direction:
+    #         case "up":
+    #             return (keyboard != "left" and keyboard != "right" and self[-1] == (eaten_food.x, eaten_food.y + 1)) \
+    #                 or (keyboard == "left" and self[-1] == (eaten_food.x + 1, eaten_food.y))
+    #         case "down":
+    #             return self[-1] == (eaten_food.x, eaten_food.y - 1)
+    #         case "left":
+    #             return self[-1] == (eaten_food.x + 1, eaten_food.y)
+    #         case "right":
+    #             return self[-1] == (eaten_food.x - 1, eaten_food.y)
+    #         case _:
+    #             pass
+
+    def is_food_ahead(self, food, direct) -> bool:
+        match direct:
             case "up":
-                return (keyboard != "left" and keyboard != "right" and self[-1] == (eaten_food.x, eaten_food.y + 1)) \
-                    or (keyboard == "left" and self[-1] == (eaten_food.x + 1, eaten_food.y))
+                return (self[-1] == (food.x, food.y + 1) or
+                        self[-1] == (food.x, food.y - (int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size) - 1)))
             case "down":
-                return self[-1] == (eaten_food.x, eaten_food.y - 1)
+                return (self[-1] == (food.x, food.y - 1) or
+                        self[-1] == (food.x, food.y + (int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size) - 1)))
             case "left":
-                return self[-1] == (eaten_food.x + 1, eaten_food.y)
+                return (self[-1] == (food.x + 1, food.y) or
+                        self[-1] == (food.x - (int(Screen.origin_width / Screen.pixel_size) - 1), food.y))
             case "right":
-                return self[-1] == (eaten_food.x - 1, eaten_food.y)
+                return (self[-1] == (food.x - 1, food.y) or
+                        self[-1] == (food.x + (int(Screen.origin_width / Screen.pixel_size) - 1), food.y))
             case _:
-                pass
+                return False
+
+    def is_food_up(self, food, direct) -> bool:
+        if direct == "left" or direct == "right":
+            return self.is_food_ahead(food, "up")
+        else:
+            return False
+
+    def is_food_down(self, food, direct) -> bool:
+        if direct == "left" or direct == "right":
+            return self.is_food_ahead(food, "down")
+        else:
+            return False
+
+    def is_food_right(self, food, direct) -> bool:
+        if direct == "up" or direct == "down":
+            return self.is_food_ahead(food, "right")
+        else:
+            return False
+
+    def is_food_left(self, food, direct) -> bool:
+        if direct == "up" or direct == "down":
+            return self.is_food_ahead(food, "left")
+        else:
+            return False
 
     def faster(self):
-        self.speed -= 0.1
+        self.speed -= 0.01
 
     # def longer(self, loc: tuple):
     #     self.append(loc)
@@ -48,48 +88,52 @@ class Snake(deque):
     def is_direction_vertical(self):
         return self.direction == "up" or self.direction == "down"
 
-    def move_up(self):
+    def move_up(self, eat_flag: bool):
         self.direction = "up"
-        self.popleft()
+        if not eat_flag:
+            self.popleft()
         if self[-1][1] == 0:
             self.append((self[-1][0], int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size) - 1))
         else:
             self.append((self[-1][0], self[-1][1] - 1))
 
-    def move_down(self):
+    def move_down(self, eat_flag: bool):
         self.direction = "down"
-        self.popleft()
+        if not eat_flag:
+            self.popleft()
         if self[-1][1] == int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size) - 1:
             self.append((self[-1][0], 0))
         else:
             self.append((self[-1][0], self[-1][1] + 1))
 
-    def move_left(self):
+    def move_left(self, eat_flag: bool):
         self.direction = "left"
-        self.popleft()
+        if not eat_flag:
+            self.popleft()
         if self[-1][0] == 0:
             self.append((int(Screen.origin_width / Screen.pixel_size) - 1, self[-1][1]))
         else:
             self.append((self[-1][0] - 1, self[-1][1]))
 
-    def move_right(self):
+    def move_right(self, eat_flag: bool):
         self.direction = "right"
-        self.popleft()
+        if not eat_flag:
+            self.popleft()
         if self[-1][0] == int(Screen.origin_width / Screen.pixel_size) - 1:
             self.append((0, self[-1][1]))
         else:
             self.append((self[-1][0] + 1, self[-1][1]))
 
-    def move(self):
+    def move(self, eat_flag: bool):
         match self.direction:
             case "up":
-                self.move_up()
+                self.move_up(eat_flag)
             case "down":
-                self.move_down()
+                self.move_down(eat_flag)
             case "left":
-                self.move_left()
+                self.move_left(eat_flag)
             case "right":
-                self.move_right()
+                self.move_right(eat_flag)
             case _:
                 pass
 
