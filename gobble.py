@@ -23,6 +23,13 @@ def Reset_All():
     Init_All()
 
 
+def MoveFlag_Clear():
+    event_dict["up"] = False
+    event_dict["down"] = False
+    event_dict["left"] = False
+    event_dict["right"] = False
+
+
 if __name__ == "__main__":
     game_screen = Screen()
     snake = Snake()
@@ -57,24 +64,21 @@ if __name__ == "__main__":
                 else:
                     last_time = now_time
 
-                if event_dict["up"]:
-                    event_dict["up"] = False
-                    if snake.is_direction_horizontal():
-                        snake.move_up(eat_flag := snake.is_food_up(food, snake.direction))
-                elif event_dict["down"]:
-                    event_dict["down"] = False
-                    if snake.is_direction_horizontal():
-                        snake.move_down(eat_flag := snake.is_food_down(food, snake.direction))
-                elif event_dict["left"]:
-                    event_dict["left"] = False
-                    if snake.is_direction_vertical():
-                        snake.move_left(eat_flag := snake.is_food_left(food, snake.direction))
-                elif event_dict["right"]:
-                    event_dict["right"] = False
-                    if snake.is_direction_vertical():
-                        snake.move_right(eat_flag := snake.is_food_right(food, snake.direction))
+                if event_dict["up"] and snake.is_direction_horizontal():
+                    MoveFlag_Clear()
+                    snake.move_up(eat_flag := snake.is_food_up(food, snake.direction))
+                elif event_dict["down"] and snake.is_direction_horizontal():
+                    MoveFlag_Clear()
+                    snake.move_down(eat_flag := snake.is_food_down(food, snake.direction))
+                elif event_dict["left"] and snake.is_direction_vertical():
+                    MoveFlag_Clear()
+                    snake.move_left(eat_flag := snake.is_food_left(food, snake.direction))
+                elif event_dict["right"] and snake.is_direction_vertical():
+                    MoveFlag_Clear()
+                    snake.move_right(eat_flag := snake.is_food_right(food, snake.direction))
                 else:  # 没有按键按下
                     snake.move(eat_flag := snake.is_food_ahead(food, snake.direction))
+                    MoveFlag_Clear()
 
                 if eat_flag:
                     eat_flag = False
