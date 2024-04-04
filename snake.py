@@ -1,6 +1,7 @@
 from collections import deque
 import pygame
 from screen import Screen
+from barrier import Barrier
 
 
 class Snake(deque):
@@ -19,21 +20,15 @@ class Snake(deque):
     def reset(self):
         self.init()
 
-    """还需要修改"""
-    # def eat_food(self, eaten_food, keyboard: str):
-    #     # return self[-1] == (eaten_food.x, eaten_food.y)
-    #     match self.direction:
-    #         case "up":
-    #             return (keyboard != "left" and keyboard != "right" and self[-1] == (eaten_food.x, eaten_food.y + 1)) \
-    #                 or (keyboard == "left" and self[-1] == (eaten_food.x + 1, eaten_food.y))
-    #         case "down":
-    #             return self[-1] == (eaten_food.x, eaten_food.y - 1)
-    #         case "left":
-    #             return self[-1] == (eaten_food.x + 1, eaten_food.y)
-    #         case "right":
-    #             return self[-1] == (eaten_food.x - 1, eaten_food.y)
-    #         case _:
-    #             pass
+    def is_dead(self, barrier: Barrier):
+        head = self[-1]
+        for i in range(len(self) - 1):
+            if head == self[i]:
+                return True
+
+        for tp in barrier:
+            if head == tp:
+                return True
 
     def is_food_ahead(self, food, direct) -> bool:
         match direct:
@@ -87,9 +82,6 @@ class Snake(deque):
             self.speed -= 0.01
         else:
             pass
-
-    # def longer(self, loc: tuple):
-    #     self.append(loc)
 
     def is_direction_horizontal(self):
         return self.direction == "left" or self.direction == "right"

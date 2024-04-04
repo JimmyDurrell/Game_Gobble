@@ -17,7 +17,9 @@ class Screen:
     background_color = (80, 80, 100)
     line_color = (0, 0, 0)  # 游戏点之间的线
     button_color = (200, 200, 200)
-    font_color = (255, 255, 255)
+    text_color = (255, 255, 255)
+    text_over_color = (213, 0, 0)
+    text_background_color = (100, 100, 100)
     shadow_color = (50, 50, 50)
 
     shadow_offset = 3
@@ -35,6 +37,7 @@ class Screen:
         self.font_start_menu = pygame.font.Font(None, 48)
         self.font_score = pygame.font.SysFont('SimHei', 20)  # 得分的字体
         self.font_over = pygame.font.Font(None, 72)  # GAME OVER 的字体
+        self.font_esc = pygame.font.Font(None, 36)
 
     def background(self):
         self.screen_game.fill(self.background_color)  # 填充背景色
@@ -50,18 +53,18 @@ class Screen:
             pygame.draw.line(self.screen_game, self.line_color, (0, y), (self.width, y), self.line_width)
 
     def display_score(self, score):
-        imgText = self.font_score.render(f"得分: {score}", True, self.font_color)
+        imgText = self.font_score.render(f"得分: {score}", True, self.text_color)
         self.screen_game.blit(imgText, (self.width - 110, 10))
 
     def start_menu(self):
         # 标题
-        text_welcome = self.font_start_menu.render("Welcome to Gobble!", True, self.font_color)
+        text_welcome = self.font_start_menu.render("Welcome to Gobble!", True, self.text_color)
         text_rect = text_welcome.get_rect(center=(self.width / 2, 100))
         # 绘制标题文本
         self.screen_game.blit(text_welcome, text_rect)
 
         # 开始按钮
-        button_text_start = self.font_start_menu.render("Start", True, self.font_color)
+        button_text_start = self.font_start_menu.render("Start", True, self.text_color)
         button_text_start_rect = button_text_start.get_rect(center=self.button_rect_start.center)
         # 绘制开始按钮阴影
         shadow_rect = pygame.Rect(self.button_rect_start.left + self.shadow_offset,
@@ -73,7 +76,7 @@ class Screen:
         self.screen_game.blit(button_text_start, button_text_start_rect)
 
         # 退出按钮
-        button_text_exit = self.font_start_menu.render("Exit", True, self.font_color)
+        button_text_exit = self.font_start_menu.render("Exit", True, self.text_color)
         button_text_exit_rect = button_text_exit.get_rect(center=self.button_rect_exit.center)
         # 绘制退出按钮阴影
         shadow_rect = pygame.Rect(self.button_rect_exit.left + self.shadow_offset,
@@ -83,6 +86,40 @@ class Screen:
         # 绘制退出按钮
         pygame.draw.rect(self.screen_game, self.button_color, self.button_rect_exit)
         self.screen_game.blit(button_text_exit, button_text_exit_rect)
+        
+    def esc_menu(self):
+        # 如果处于暂停状态，显示一个简单的弹出界面
+        text1 = self.font_esc.render("Paused. Press ESC to continue.", True, self.text_color)
+        text2 = self.font_esc.render("Or press Enter to return", True, self.text_color)
+        text_rect1 = text1.get_rect(center=(self.width / 2, self.height / 2 - 20))
+        text_rect2 = text2.get_rect(center=(self.width / 2, self.height / 2 + 20))
+        pygame.draw.rect(self.screen_game, self.text_background_color, text_rect1.inflate(20, 20))  # 绘制背景
+        pygame.draw.rect(self.screen_game, self.text_background_color, text_rect2.inflate(20, 20))  # 绘制背景
+        self.screen_game.blit(text1, text_rect1)  # 绘制文本
+        self.screen_game.blit(text2, text_rect2)  # 绘制文本
+
+        # 更新屏幕
+        pygame.display.update()
+
+    def end_menu(self):
+        # 标题
+        text_welcome = self.font_over.render("Game Over", True, self.text_over_color)
+        text_rect = text_welcome.get_rect(center=(self.width / 2, 100))
+        # 绘制标题文本
+        self.screen_game.blit(text_welcome, text_rect)
+
+        # 如果处于暂停状态，显示一个简单的弹出界面
+        text1 = self.font_esc.render("Press Enter to Restart.", True, self.text_color)
+        text2 = self.font_esc.render("Or press Esc to return", True, self.text_color)
+        text_rect1 = text1.get_rect(center=(self.width / 2, self.height / 2 - 20))
+        text_rect2 = text2.get_rect(center=(self.width / 2, self.height / 2 + 20))
+        pygame.draw.rect(self.screen_game, self.text_background_color, text_rect1.inflate(20, 20))  # 绘制背景
+        pygame.draw.rect(self.screen_game, self.text_background_color, text_rect2.inflate(20, 20))  # 绘制背景
+        self.screen_game.blit(text1, text_rect1)  # 绘制文本
+        self.screen_game.blit(text2, text_rect2)  # 绘制文本
+
+        # 更新屏幕
+        pygame.display.update()
 
 
 if __name__ == "__main__":
