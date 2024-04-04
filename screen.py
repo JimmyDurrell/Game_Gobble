@@ -11,7 +11,9 @@ class Screen:
     width = int(origin_width / pixel_size) - 1 + origin_width
     height = int((origin_height - bar_height) / pixel_size) + origin_height
     size = (width, height)
+    screen_game = pygame.display.set_mode(size)  # 定义窗口大小
 
+    # 设置颜色
     background_color = (80, 80, 100)
     line_color = (0, 0, 0)  # 游戏点之间的线
     button_color = (200, 200, 200)
@@ -21,7 +23,6 @@ class Screen:
     shadow_offset = 3
     button_rect_start = pygame.Rect(width / 2 - 100, 175, 200, 50)
     button_rect_exit = pygame.Rect(width / 2 - 100, 250, 200, 50)
-    screen_game = pygame.display.set_mode(size)  # 定义窗口大小
 
     def __init__(self):
         pygame.init()
@@ -29,6 +30,11 @@ class Screen:
 
         # 制作窗口
         pygame.display.set_caption("贪吃蛇")  # 定义标题
+
+        # 设置字体
+        self.font_start_menu = pygame.font.Font(None, 48)
+        self.font_score = pygame.font.SysFont('SimHei', 20)  # 得分的字体
+        self.font_over = pygame.font.Font(None, 72)  # GAME OVER 的字体
 
     def background(self):
         self.screen_game.fill(self.background_color)  # 填充背景色
@@ -43,21 +49,23 @@ class Screen:
         for y in range(self.bar_height, self.height, self.pixel_size + 1):
             pygame.draw.line(self.screen_game, self.line_color, (0, y), (self.width, y), self.line_width)
 
-    def start_menu(self):
-        # 设置字体
-        font = pygame.font.Font(None, 48)
+    def display_score(self, score):
+        imgText = self.font_score.render(f"得分: {score}", True, self.font_color)
+        self.screen_game.blit(imgText, (self.width - 110, 10))
 
+    def start_menu(self):
         # 标题
-        text_welcome = font.render("Welcome to Gobble!", True, self.font_color)
+        text_welcome = self.font_start_menu.render("Welcome to Gobble!", True, self.font_color)
         text_rect = text_welcome.get_rect(center=(self.width / 2, 100))
         # 绘制标题文本
         self.screen_game.blit(text_welcome, text_rect)
 
         # 开始按钮
-        button_text_start = font.render("Start", True, self.font_color)
+        button_text_start = self.font_start_menu.render("Start", True, self.font_color)
         button_text_start_rect = button_text_start.get_rect(center=self.button_rect_start.center)
         # 绘制开始按钮阴影
-        shadow_rect = pygame.Rect(self.button_rect_start.left + self.shadow_offset, self.button_rect_start.top + self.shadow_offset,
+        shadow_rect = pygame.Rect(self.button_rect_start.left + self.shadow_offset,
+                                  self.button_rect_start.top + self.shadow_offset,
                                   self.button_rect_start.width, self.button_rect_start.height)
         pygame.draw.rect(self.screen_game, self.shadow_color, shadow_rect)
         # 绘制开始按钮
@@ -65,7 +73,7 @@ class Screen:
         self.screen_game.blit(button_text_start, button_text_start_rect)
 
         # 退出按钮
-        button_text_exit = font.render("Exit", True, self.font_color)
+        button_text_exit = self.font_start_menu.render("Exit", True, self.font_color)
         button_text_exit_rect = button_text_exit.get_rect(center=self.button_rect_exit.center)
         # 绘制退出按钮阴影
         shadow_rect = pygame.Rect(self.button_rect_exit.left + self.shadow_offset,

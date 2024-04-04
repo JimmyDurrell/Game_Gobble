@@ -10,6 +10,7 @@ def Update_All():
     game_screen.background()
     snake.draw(game_screen)
     food.draw(game_screen)
+    game_screen.display_score(score)
 
 
 def Init_All():
@@ -35,6 +36,7 @@ if __name__ == "__main__":
     snake = Snake()
     food = Food()
     eat_flag = False
+    score = 0
 
     event_dict = {"enter": False, "esc": False, "space": False,
                   "left": False, "right": False, "up": False, "down": False,
@@ -84,6 +86,7 @@ if __name__ == "__main__":
                     eat_flag = False
                     snake.faster()
                     food.create_food(snake)
+                    score += 1
 
         elif event_dict["mouse"]:
             time.sleep(0.15)
