@@ -2,6 +2,7 @@ import random
 import pygame
 from snake import Snake
 from screen import Screen
+from barrier import Barrier
 
 
 class Food:
@@ -9,10 +10,10 @@ class Food:
     y = -100
     color = (0, 200, 0)
 
-    def create_food(self, snake: Snake):
+    def create_food(self, snake: Snake, barrier: Barrier):
         self.x = random.randint(0, int(Screen.origin_width / Screen.pixel_size) - 1)
         self.y = random.randint(0, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size) - 1)
-        while (self.x, self.y) in snake:
+        while (self.x, self.y) in snake or (self.x, self.y) in barrier:
             self.x = random.randint(0, int(Screen.origin_width / Screen.pixel_size) - 1)
             self.y = random.randint(0, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size) - 1)
 

@@ -5,6 +5,7 @@ from food import Food
 from barrier import Barrier
 import time
 from pygame_event import pygame_process_event
+from typing import List
 
 
 def Update_All():
@@ -22,7 +23,7 @@ def Init_All():
 
 def Reset_All():
     snake.init()
-    food.create_food(snake)
+    food.create_food(snake, barrier)
     Update_All()
 
 
@@ -33,6 +34,23 @@ def MoveFlag_Clear():
     event_dict["right"] = False
 
 
+def Event_Dict_Clear():
+    for key in event_dict.keys():
+        event_dict[key] = False
+
+
+def Record_Score(num):
+    with open("score.txt", "a") as f:
+        f.write(f"{num}\n")
+    with open("score.txt", "r") as f:
+        score_list = f.readlines()  # type: List[int | str]
+        for i in range(len(score_list)):
+            score_list[i] = score_list[i].strip("\n")
+            score_list[i] = int(score_list[i])
+
+        return max(score_list)
+
+
 if __name__ == "__main__":
     game_screen = Screen()
     snake = Snake()
@@ -40,6 +58,8 @@ if __name__ == "__main__":
     barrier = Barrier.create_barrier(1)
     eat_flag = False
     score = 0
+    max_score = 0
+    your_score = 0
 
     event_dict = {"enter": False, "esc": False, "space": False,
                   "left": False, "right": False, "up": False, "down": False,
@@ -56,6 +76,7 @@ if __name__ == "__main__":
             if event_dict["esc"]:
                 game_screen.esc_menu()
                 if event_dict["enter"]:
+                    score = 0
                     Init_All()
                     pygame.display.flip()
                     event_dict["enter"] = event_dict["esc"] = event_dict["start"] = False
@@ -88,12 +109,13 @@ if __name__ == "__main__":
                 if eat_flag:
                     eat_flag = False
                     snake.faster()
-                    food.create_food(snake)
+                    food.create_food(snake, barrier)
                     score += 1
                 if snake.is_dead(barrier):
                     event_dict["start"] = False
                     event_dict["end"] = True
-
+                    max_score, your_score = Record_Score(score), score
+                    score = 0
         elif event_dict["mouse"]:
             time.sleep(0.15)
             Update_All()
@@ -101,16 +123,15 @@ if __name__ == "__main__":
             event_dict["start"] = True
             event_dict["mouse"] = False
         elif event_dict["end"]:
-            score = 0
-            game_screen.end_menu()
+            game_screen.end_menu(your_score, max_score)
             if event_dict["esc"]:
                 Init_All()
                 pygame.display.flip()
-                event_dict["enter"] = event_dict["esc"] = event_dict["start"] = event_dict["end"] = False
+                Event_Dict_Clear()
             elif event_dict["enter"]:
                 Reset_All()
                 pygame.display.flip()
-                event_dict["enter"] = event_dict["esc"] = event_dict["end"] = False
+                Event_Dict_Clear()
                 event_dict["start"] = True
         else:
             pass

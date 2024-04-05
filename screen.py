@@ -101,14 +101,14 @@ class Screen:
         # 更新屏幕
         pygame.display.update()
 
-    def end_menu(self):
+    def end_menu(self, score, max_score):
         # 标题
         text_welcome = self.font_over.render("Game Over", True, self.text_over_color)
         text_rect = text_welcome.get_rect(center=(self.width / 2, 100))
         # 绘制标题文本
         self.screen_game.blit(text_welcome, text_rect)
 
-        # 如果处于暂停状态，显示一个简单的弹出界面
+        # Press Enter to Restart. Or press Esc to return
         text1 = self.font_esc.render("Press Enter to Restart.", True, self.text_color)
         text2 = self.font_esc.render("Or press Esc to return", True, self.text_color)
         text_rect1 = text1.get_rect(center=(self.width / 2, self.height / 2 - 20))
@@ -117,6 +117,16 @@ class Screen:
         pygame.draw.rect(self.screen_game, self.text_background_color, text_rect2.inflate(20, 20))  # 绘制背景
         self.screen_game.blit(text1, text_rect1)  # 绘制文本
         self.screen_game.blit(text2, text_rect2)  # 绘制文本
+
+        # score and max_score
+        text3 = self.font_esc.render(f"Your Score: {score}", True, self.text_color)
+        text4 = self.font_esc.render(f"Max Score: {max_score}", True, self.text_color)
+        text_rect3 = text3.get_rect(center=(self.width / 2, self.height / 2 + 80))
+        text_rect4 = text4.get_rect(center=(self.width / 2, self.height / 2 + 110))
+        pygame.draw.rect(self.screen_game, self.text_background_color, text_rect3.inflate(20, 20))  # 绘制背景
+        pygame.draw.rect(self.screen_game, self.text_background_color, text_rect4.inflate(20, 20))  # 绘制背景
+        self.screen_game.blit(text3, text_rect3)  # 绘制文本
+        self.screen_game.blit(text4, text_rect4)  # 绘制文本
 
         # 更新屏幕
         pygame.display.update()
