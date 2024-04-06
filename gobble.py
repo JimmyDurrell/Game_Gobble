@@ -6,6 +6,7 @@ from barrier import Barrier
 import time
 from pygame_event import pygame_process_event
 from typing import List
+from music import Music
 
 
 def Update_All():
@@ -18,6 +19,7 @@ def Update_All():
 
 def Init_All():
     Reset_All()
+    Music.play_music(menu_music)
     game_screen.start_menu()
 
 
@@ -66,6 +68,10 @@ if __name__ == "__main__":
                   "mouse": False, "start": False, "end": False,
                   "default": False}
     last_time = time.time()
+    menu_music = "music/menu_music.mp3"
+    game_music = "music/game_music.mp3"
+    eat_music = "music/eat_music.mp3"
+    dead_music = "music/dead_music.wav"
 
     Init_All()
     pygame.display.update()
@@ -73,7 +79,9 @@ if __name__ == "__main__":
         word = pygame_process_event(game_screen)
         event_dict[word] = not event_dict[word]
         if event_dict["start"]:
+            Music.unpause_music()
             if event_dict["esc"]:
+                Music.pause_music()
                 game_screen.esc_menu()
                 if event_dict["enter"]:
                     score = 0
@@ -107,11 +115,13 @@ if __name__ == "__main__":
                     MoveFlag_Clear()
 
                 if eat_flag:
+                    Music.add_music(eat_music, False)
                     eat_flag = False
                     snake.faster()
                     food.create_food(snake, barrier)
                     score += 1
                 if snake.is_dead(barrier):
+                    Music.play_music(dead_music, False)
                     event_dict["start"] = False
                     event_dict["end"] = True
                     max_score, your_score = Record_Score(score), score
@@ -122,6 +132,7 @@ if __name__ == "__main__":
             pygame.display.flip()
             event_dict["start"] = True
             event_dict["mouse"] = False
+            Music.play_music(game_music)
         elif event_dict["end"]:
             game_screen.end_menu(your_score, max_score)
             if event_dict["esc"]:
@@ -133,5 +144,6 @@ if __name__ == "__main__":
                 pygame.display.flip()
                 Event_Dict_Clear()
                 event_dict["start"] = True
+                Music.play_music(game_music)
         else:
             pass
