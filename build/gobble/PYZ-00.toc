@@ -498,6 +498,7 @@
   ('multiprocessing.util',
    'D:\\Softwares\\Python3.11.5\\Lib\\multiprocessing\\util.py',
    'PYMODULE'),
+  ('music', 'D:\\Beihang\\Learn_Python\\Game_Gobble\\music.py', 'PYMODULE'),
   ('netrc', 'D:\\Softwares\\Python3.11.5\\Lib\\netrc.py', 'PYMODULE'),
   ('nturl2path', 'D:\\Softwares\\Python3.11.5\\Lib\\nturl2path.py', 'PYMODULE'),
   ('numbers', 'D:\\Softwares\\Python3.11.5\\Lib\\numbers.py', 'PYMODULE'),
