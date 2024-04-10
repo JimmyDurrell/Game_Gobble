@@ -12,10 +12,10 @@ class Snake(deque):
 
     def init(self):
         self.clear()
-        self.direction = 'right'
-        self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2), int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2)))
+        self.direction = 'up'
+        self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2) - 1, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2) - 1))
         self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2) - 1, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2)))
-        self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2) - 2, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2)))
+        self.appendleft((int(Screen.origin_width / Screen.pixel_size / 2) - 1, int((Screen.origin_height - Screen.bar_height) / Screen.pixel_size / 2) + 1))
 
     def reset(self):
         self.init()
@@ -73,11 +73,11 @@ class Snake(deque):
 
     def faster(self):
         if self.speed > 0.7:
-            self.speed -= 0.02
+            self.speed -= 0.04
         elif self.speed > 0.5:
-            self.speed -= 0.015
+            self.speed -= 0.03
         elif self.speed > 0.3:
-            self.speed -= 0.012
+            self.speed -= 0.02
         elif self.speed > 0.2:
             self.speed -= 0.01
         else:

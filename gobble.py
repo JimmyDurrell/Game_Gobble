@@ -57,7 +57,7 @@ if __name__ == "__main__":
     game_screen = Screen()
     snake = Snake()
     food = Food()
-    barrier = Barrier.create_barrier(1)
+    barrier = Barrier.create_barrier()
     eat_flag = False
     score = 0
     max_score = 0
