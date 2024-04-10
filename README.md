@@ -2,7 +2,7 @@
 
 ## Welcome
 
-This is a classic game. To play it, run the script below or double-click the `gobble.exe` file in `build` directory.
+This is a classic game. To play it, run the script below or double-click the `gobble.exe` file.
 
 `python gobble.py`
 

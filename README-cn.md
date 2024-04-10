@@ -4,7 +4,7 @@
 
 这是一个经典的游戏。
 
-双击`build`文件夹下的`gobble.exe`文件或者运行下面这个脚本来启动。
+双击`gobble.exe`文件或者运行下面这个脚本来启动。
 
 `python gobble.py`
 
