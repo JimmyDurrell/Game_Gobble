@@ -29,13 +29,6 @@ def Reset_All():
     Update_All()
 
 
-def MoveFlag_Clear():
-    event_dict["up"] = False
-    event_dict["down"] = False
-    event_dict["left"] = False
-    event_dict["right"] = False
-
-
 def Event_Dict_Clear():
     for key in event_dict.keys():
         event_dict[key] = False
@@ -68,10 +61,13 @@ if __name__ == "__main__":
                   "mouse": False, "start": False, "end": False,
                   "default": False}
     last_time = time.time()
+    last_time_music = time.time()
     menu_music = "music/menu_music.mp3"
     game_music = "music/game_music.mp3"
     eat_music = "music/eat_music.mp3"
     dead_music = "music/dead_music.wav"
+
+    sound_effect = pygame.mixer.Sound(eat_music)
 
     Init_All()
     pygame.display.update()
@@ -82,6 +78,7 @@ if __name__ == "__main__":
             Music.unpause_music()
             if event_dict["esc"]:
                 Music.pause_music()
+                Music.sound_music_stop(sound_effect)
                 game_screen.esc_menu()
                 if event_dict["enter"]:
                     score = 0
@@ -93,34 +90,39 @@ if __name__ == "__main__":
                 pygame.display.update()
 
                 now_time = time.time()
+                now_time_music = time.time()
+                if now_time_music - last_time_music >= 0.51:
+                    Music.sound_music_stop(sound_effect)
+                    last_time_music = now_time_music
+
                 if now_time - last_time <= snake.speed:
                     continue
                 else:
                     last_time = now_time
 
                 if event_dict["up"] and snake.is_direction_horizontal():
-                    MoveFlag_Clear()
                     snake.move_up(eat_flag := snake.is_food_up(food, snake.direction))
                 elif event_dict["down"] and snake.is_direction_horizontal():
-                    MoveFlag_Clear()
                     snake.move_down(eat_flag := snake.is_food_down(food, snake.direction))
                 elif event_dict["left"] and snake.is_direction_vertical():
-                    MoveFlag_Clear()
                     snake.move_left(eat_flag := snake.is_food_left(food, snake.direction))
                 elif event_dict["right"] and snake.is_direction_vertical():
-                    MoveFlag_Clear()
                     snake.move_right(eat_flag := snake.is_food_right(food, snake.direction))
                 else:  # 没有按键按下
                     snake.move(eat_flag := snake.is_food_ahead(food, snake.direction))
-                    MoveFlag_Clear()
+
+                Event_Dict_Clear()
+                event_dict["start"] = True
 
                 if eat_flag:
-                    Music.add_music(eat_music, False)
+                    Music.add_music(sound_effect)
+                    last_time_music = time.time()
                     eat_flag = False
                     snake.faster()
                     food.create_food(snake, barrier)
                     score += 1
                 if snake.is_dead(barrier):
+                    Music.sound_music_stop(sound_effect)
                     Music.play_music(dead_music, False)
                     event_dict["start"] = False
                     event_dict["end"] = True
